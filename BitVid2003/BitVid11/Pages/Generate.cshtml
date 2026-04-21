@@ -1,0 +1,32 @@
+﻿@page
+@model BitVid11.Pages.GenerateModel
+@{
+}
+<h2>Generate Video</h2>
+
+<form method="post" enctype="multipart/form-data">
+
+    <div>
+        <label>Prompt</label>
+        <textarea asp-for="Prompt" rows="4" style="width:400px"></textarea>
+    </div>
+
+    <br />
+
+    <div>
+        <label>Reference Image (optional)</label>
+        <input type="file" asp-for="Reference" />
+    </div>
+
+    <br />
+
+    <button type="submit">Generate Video</button>
+
+</form>
+
+@if (Model.JobId != null)
+{
+    <hr />
+    <p>Job submitted!</p>
+    <p>Job ID: <b>@Model.JobId</b></p>
+}

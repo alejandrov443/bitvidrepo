@@ -1,0 +1,93 @@
+﻿@page
+@model BitVid11.Pages.Store.AdminProductsModel
+@{
+    ViewData["Title"] = "Manage Products";
+    Layout = "_Layout2";
+}
+
+<div class="admin-products-container">
+    <h2>🛠 Manage Products</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Character</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Image</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.Products)
+            {
+                <tr>
+                    <td>@p.Id</td>
+                    <td>@p.Character?.Name</td>
+                    <td>@p.Name</td>
+                    <td>$@p.Price</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(p.ImageFile))
+                        {
+                            <img src="~/product/images/@p.ImageFile" alt="@p.Name" width="80" />
+                        }
+                    </td>
+                    <td>@p.Description</td>
+                    <td>
+                        <a asp-page="/Store/EditProduct" asp-route-id="@p.Id">✏️ Edit</a> |
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@p.Id" style="display:inline" onsubmit="return confirm('Are you sure?');">
+                            <button type="submit">🗑 Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .admin-products-container {
+        padding: 2rem;
+        color: #fff;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+
+    th, td {
+        padding: 0.5rem;
+        border: 1px solid #444;
+        text-align: left;
+    }
+
+    img {
+        border-radius: 0.3rem;
+    }
+
+    button {
+        background-color: #ff4d4d;
+        color: #fff;
+        border: none;
+        padding: 0.3rem 0.5rem;
+        cursor: pointer;
+        border-radius: 0.3rem;
+    }
+
+        button:hover {
+            background-color: #ff1a1a;
+        }
+
+    a {
+        color: #ffb400;
+        text-decoration: none;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+</style>

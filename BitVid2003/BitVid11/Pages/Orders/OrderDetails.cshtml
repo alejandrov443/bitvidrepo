@@ -1,0 +1,82 @@
+﻿@page "{id:int}"
+@model BitVid11.Pages.Orders.OrderDetailsModel
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+@if (Model.Order == null)
+{
+    <div class="alert alert-danger" role="alert">
+        Order not found.
+    </div>
+}
+else
+{
+    <div class="card bg-dark text-light shadow-lg mb-4">
+        <div class="card-header bg-gradient-primary text-white">
+            <h2 class="mb-0">Order #@Model.Order.Id</h2>
+        </div>
+        <div class="card-body">
+            <!-- Order Info -->
+            <div class="mb-4">
+                <p class="mb-1"><strong>Tracking Number:</strong> @Model.Order.TrackingNumber</p>
+                <p class="mb-1">
+                    <strong>Status:</strong>
+                    @{
+                        var badgeClass = Model.Order.OrderStatus switch
+                        {
+                            "Completed" => "badge bg-success",
+                            "Pending" => "badge bg-warning text-dark",
+                            "Cancelled" => "badge bg-danger",
+                            _ => "badge bg-secondary"
+                        };
+                    }
+                    <span class="@badgeClass">@Model.Order.OrderStatus</span>
+                </p>
+                <p class="mb-0"><strong>Date:</strong> @Model.Order.CreatedAt.ToString("f")</p>
+            </div>
+
+            <!-- Shipping Info -->
+            <h4 class="mt-4 mb-3">Shipping Information</h4>
+            <div class="p-3 mb-4 rounded bg-secondary bg-opacity-10 border border-secondary">
+                <p class="mb-1">@Model.Order.FullName</p>
+                <p class="mb-1">@Model.Order.AddressLine1</p>
+                @if (!string.IsNullOrEmpty(Model.Order.AddressLine2))
+                {
+                    <p class="mb-1">@Model.Order.AddressLine2</p>
+                }
+                <p class="mb-1">@Model.Order.City, @Model.Order.State @Model.Order.PostalCode</p>
+                <p class="mb-0">@Model.Order.Country</p>
+            </div>
+
+            <!-- Payment Info -->
+            <h4 class="mt-4 mb-3">Payment Information</h4>
+            <div class="p-3 mb-4 rounded bg-secondary bg-opacity-10 border border-secondary">
+                <p class="mb-0"><strong>Payment Status:</strong> @Model.Order.PaymentStatus</p>
+            </div>
+
+            <!-- Product Info -->
+            <h4 class="mt-4 mb-3">Product</h4>
+            <div class="table-responsive mb-4">
+                <table class="table table-dark table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Product</th>
+                            <th class="text-end">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@Model.Order.Product.Name</td>
+                            <td class="text-end">$@Model.Order.Product.Price</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <a asp-page="/Orders/MyOrders" class="btn btn-outline-light">
+                &larr; Back to Orders
+            </a>
+        </div>
+    </div>
+}

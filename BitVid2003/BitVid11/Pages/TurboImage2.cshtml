@@ -1,0 +1,22 @@
+﻿@page
+@model BitVid11.Pages.TurboImage2Model
+@{
+}
+<h2>Generate Image</h2>
+
+<form method="post">
+    <input type="text" name="Prompt" placeholder="Enter a prompt" value="@Model.Prompt" style="width:400px" />
+    <button type="submit">Generate</button>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.ImagePath))
+{
+    <h3>Generated Image:</h3>
+    <img src="@Model.ImagePath" width="512" />
+
+    <div style="margin-top:10px;">
+        <a asp-page-handler="Download" asp-route-url="@Model.ImagePath">
+            <button type="button">Download Image</button>
+        </a>
+    </div>
+}

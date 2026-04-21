@@ -1,0 +1,89 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var userAuth = HttpContextAccessor.HttpContext.Request.Cookies["UserAuth"]; var currentPath = HttpContextAccessor.HttpContext.Request.Path.Value.ToLower();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BitVid</title> <!-- CSS files -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/BitVid11.styles.css" asp-append-version="true" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGGL0X5DRS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-VGGL0X5DRS');
+    </script>
+
+</head>
+<body class="dark-background d-flex flex-column min-vh-100">
+    @if (string.IsNullOrEmpty(userAuth))
+    {
+        <div class="d-flex justify-content-center align-items-center p-3 bg-dark text-white"> <h5 class="mb-0 me-3">💬 Talk to AI Characters 🤖✨</h5> <a class="btn fw-bold" style="background-color:#6f42c1; color:white;" asp-area="" asp-page="/Accounts/Register"> Sign up to chat </a> </div>
+    }
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-page="/videopage"> <img src="~/images/Bitvid.png" alt="BitVid" style="height: 32px;" /> </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a> </li> 
+                        @if (string.IsNullOrEmpty(userAuth)) {
+                            <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-page="/Accounts/Login">Login</a> </li>
+                            <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-page="/GenerateLTXVideo">Generate Video</a> </li>
+                            <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-page="/TurboImage2">Generate Image</a> </li>
+                        } 
+                        else
+                        {
+
+                            <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-page="/Upload1">Upload Vid</a> </li>                    
+                            <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-page="/Chat/Tiles">Chat</a> </li>
+                            <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-page="/Chat/Swipe">Chat Explore</a> </li>
+                            <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-page="/Store/Shop">Shop</a> </li>
+
+                            <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-page="/Orders/MyOrders">My Orders</a> </li>
+                            <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-page="/Characters/Create">Create Character</a> </li>
+                            <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-page="/runLtxVideo">Create Video</a> </li>
+                            <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-page="/runltxvideoimage">VFI</a> </li>
+
+                            <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-page="/Tiers">Subscribe</a> </li>
+                            <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-page="/Accounts/Logout">Logout</a> </li>
+                            <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-page="/GenerateLTXVideo">Generate Video</a> </li>
+                            <li class="nav-item"> <a class="nav-link text-dark" asp-area="" asp-page="/TurboImage2">Generate Image</a> </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header> <!-- Main content grows to fill remaining space -->
+    <div class="container flex-grow-1 d-flex flex-column"> <main role="main" class="pb-3 flex-grow-1"> @RenderBody() </main> </div>
+    <footer class="border-top footer text-muted mt-auto"> <div class="container"> &copy; 2025 - BitVid - <a asp-area="" asp-page="/Privacy">Privacy</a> </div> </footer> <!-- JS files -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script> @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+<style>
+    /* Navbar active link highlight */ .nav-link.active {
+        font-weight: 600;
+        color: #ffb400 !important; /* Bumble-style highlight */
+    }
+    /* Hover effect for links */
+
+    .nav-link:hover {
+        color: #ffb400 !important;
+    }
+    /* Optional: reduce shadow and spacing for cleaner look */
+
+    .navbar {
+        padding: 0.5rem 1rem;
+    }
+</style>

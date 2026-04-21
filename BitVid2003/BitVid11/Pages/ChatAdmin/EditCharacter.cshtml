@@ -1,0 +1,171 @@
+﻿@page
+@model EditCharacterModel
+@{
+    ViewData["Title"] = "Edit Character";
+    Layout = "_Layout2";
+}
+
+<div class="edit-container">
+    <h2>Edit Character</h2>
+
+    <form method="post" enctype="multipart/form-data" class="edit-form">
+        <input type="hidden" asp-for="CharacterData.Id" />
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input asp-for="CharacterData.Name" id="name" placeholder="Enter character name" />
+        </div>
+
+        <div class="form-group">
+            <label for="origin">Origin</label>
+            <input asp-for="CharacterData.Origin" id="origin" placeholder="Enter origin" />
+        </div>
+
+        <div class="form-group">
+            <label>Current Image</label>
+            <div class="image-preview">
+                <img src="@Model.ImagePath" alt="@Model.CharacterData.Name" onerror="this.src='/images/default.png';" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="NewImage">Upload New Image</label>
+            <input type="file" name="NewImage" id="NewImage" accept="image/*" />
+        </div>
+
+        <div class="form-group">
+            <label for="NewVoice">Upload Voice File</label>
+            <input type="file" name="NewVoice" id="NewVoice" accept="audio/*" onchange="previewAudio(this)" />
+            <audio id="audioPreview" controls style="margin-top: 0.5rem; display:none;"></audio>
+            <small style="color:#ccc;">Accepted formats: .wav, .mp3, etc.</small>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="save-btn">Save</button>
+            <a href="/ChatAdmin/AdminTiles" class="cancel-btn">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    function previewAudio(input) {
+        const audio = document.getElementById('audioPreview');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                audio.src = e.target.result;
+                audio.style.display = 'block';
+            };
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            audio.src = '';
+            audio.style.display = 'none';
+        }
+    }
+</script>
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #121212;
+        color: #fff;
+    }
+
+    .edit-container {
+        max-width: 500px;
+        margin: 3rem auto;
+        padding: 2rem;
+        background: linear-gradient(135deg, #1f1f1f, #2a2a2a);
+        border-radius: 1rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #ffb400;
+    }
+
+    .edit-form .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1.5rem;
+    }
+
+    .edit-form label {
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #ffb400;
+    }
+
+    .edit-form input[type="text"],
+    .edit-form input[type="file"] {
+        padding: 0.6rem;
+        border-radius: 0.5rem;
+        border: 1px solid #444;
+        background-color: #1f1f1f;
+        color: #fff;
+        font-size: 1rem;
+    }
+
+    .image-preview {
+        display: flex;
+        justify-content: center;
+        margin-top: 0.5rem;
+    }
+
+        .image-preview img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ffb400;
+        }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .save-btn, .cancel-btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .save-btn {
+        background-color: #ffb400;
+        color: #000;
+        border: none;
+    }
+
+        .save-btn:hover {
+            transform: scale(1.05);
+        }
+
+    .cancel-btn {
+        background-color: #e74c3c;
+        color: #fff;
+    }
+
+        .cancel-btn:hover {
+            transform: scale(1.05);
+        }
+
+    @@media (max-width: 480px) {
+        .edit-container {
+            margin: 1.5rem;
+            padding: 1rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+</style>

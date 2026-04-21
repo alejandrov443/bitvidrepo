@@ -1,0 +1,87 @@
+﻿@page
+@model AdminTilesModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_Layout2";
+}
+
+<div class="tiles-container">
+    <h2>🛠 Manage Characters</h2>
+
+    <div class="tiles-grid">
+        @foreach (var character in Model.Characters)
+        {
+            var formattedName = char.ToUpper(character.Name[0]) + character.Name.Substring(1).ToLower();
+            var imageFile = $"/images/{formattedName}.png";
+
+            <div class="tile-card">
+                <div class="tile-image">
+                    <img src="@imageFile" alt="@formattedName" onerror="this.src='/images/default.png';" />
+                </div>
+
+                <div class="tile-name">@formattedName</div>
+
+                <div class="tile-actions">
+                    <a class="edit-button" href="/ChatAdmin/EditCharacter?id=@character.Id">Edit</a>
+                    <form method="post" asp-page-handler="Delete" class="delete-form">
+                        <input type="hidden" name="id" value="@character.Id" />
+                        <button type="submit" class="delete-button">Delete</button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .tiles-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1rem;
+    }
+
+    .tile-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: #1f1f1f;
+        border-radius: 1rem;
+        padding: 0.8rem;
+        width: 100%;
+        max-width: 140px;
+        color: #fff;
+        font-weight: 600;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .tile-image img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #444;
+        margin-bottom: 0.6rem;
+    }
+
+    .tile-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .edit-button {
+        background-color: #ffb400;
+        color: #000;
+        padding: 0.3rem 0.6rem;
+        border-radius: 0.5rem;
+        text-decoration: none;
+    }
+
+    .delete-button {
+        background-color: #e74c3c;
+        color: #fff;
+        border: none;
+        padding: 0.3rem 0.6rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+    }
+</style>

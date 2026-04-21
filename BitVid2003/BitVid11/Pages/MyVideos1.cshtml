@@ -1,0 +1,47 @@
+﻿@page
+@model BitVid11.Pages.MyVideos1Model
+@{
+}
+
+<h2>My Videos</h2>
+
+@if (!Model.Videos.Any())
+{
+    <p>No videos found.</p>
+}
+else
+{
+    @foreach (var videoPath in Model.Videos)
+    {
+        // Extract filename without extension for display
+        var fileName = System.IO.Path.GetFileNameWithoutExtension(videoPath);
+
+        <div class="video-item">
+            <p>@fileName</p> <!-- Display filename without .mp4 -->
+            <video controls>
+                <source src="@(videoPath)" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    }
+}
+
+<style>
+    video {
+        width: 100%;
+        height: 800px;
+    }
+
+    @@media (max-width: 768px) {
+        video
+
+    {
+        max-height: 200px;
+    }
+
+    }
+
+    .video-item {
+        margin-bottom: 20px;
+    }
+</style>

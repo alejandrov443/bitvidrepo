@@ -1,0 +1,160 @@
+﻿@page
+@model BitVid11.Pages.Store.OrderSuccessModel
+@{
+    ViewData["Title"] = "Order Success";
+    Layout = "_Layout2";
+}
+
+<div class="order-success-container">
+    <h2>✅ Thank you for your order!</h2>
+    <p>Your payment was successful. Here’s a summary of your order:</p>
+
+    <div class="order-summary">
+        <div class="product-info">
+            <img src="/product/images/@Model.ProductName.Replace(" ", "").ToLower() + " .png"
+                 alt="@Model.ProductName" />
+            <div class="product-details">
+                <h3>@Model.ProductName</h3>
+                <p class="price">$@Model.ProductPrice</p>
+            </div>
+        </div>
+
+        <div class="order-meta">
+            <h3>Order Details</h3>
+            <p><strong>Tracking Number:</strong> @Model.TrackingNumber</p>
+            <p><strong>Order Status:</strong> @Model.OrderStatus</p>
+        </div>
+
+        <div class="shipping-info">
+            <h3>Shipping Information</h3>
+            <p><strong>Name:</strong> @Model.FullName</p>
+            <p><strong>Address:</strong> @Model.AddressLine1 @Model.AddressLine2</p>
+            <p><strong>City:</strong> @Model.City</p>
+            <p><strong>State:</strong> @Model.State</p>
+            <p><strong>Postal Code:</strong> @Model.PostalCode</p>
+            <p><strong>Country:</strong> @Model.Country</p>
+        </div>
+
+        <div class="order-total">
+            <h3>Order Total</h3>
+            <p>$@Model.ProductPrice</p>
+        </div>
+    </div>
+
+    <a href="/CharacterProducts?characterId=@Model.CharacterId" class="back-to-shop">
+        ← Back to Shop
+    </a>
+</div>
+
+<style>
+    .order-success-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        color: #fff;
+        font-family: 'Segoe UI', sans-serif;
+        padding: 1rem;
+    }
+
+    h2 {
+        color: #ffb400;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        color: #ccc;
+        text-align: center;
+    }
+
+    .order-summary {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        margin-top: 2rem;
+        background-color: #1f1f1f;
+        padding: 1.5rem;
+        border-radius: 1rem;
+    }
+
+    .product-info {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+        .product-info img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 0.8rem;
+        }
+
+    .product-details h3 {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+    .price {
+        color: #ffb400;
+        font-weight: bold;
+        margin-top: 0.5rem;
+    }
+
+    .order-meta {
+        background-color: #2a2a2a;
+        padding: 1rem;
+        border-radius: 0.8rem;
+    }
+
+        .order-meta h3 {
+            color: #ffb400;
+            margin-bottom: 0.5rem;
+        }
+
+    .shipping-info {
+        background-color: #2a2a2a;
+        padding: 1rem;
+        border-radius: 0.8rem;
+    }
+
+        .shipping-info h3 {
+            margin-top: 0;
+            color: #ffb400;
+        }
+
+    .order-total {
+        background-color: #2a2a2a;
+        padding: 1rem;
+        border-radius: 0.8rem;
+        text-align: right;
+    }
+
+        .order-total h3 {
+            color: #ffb400;
+            margin-bottom: 0.5rem;
+        }
+
+    .back-to-shop {
+        display: inline-block;
+        margin-top: 1.5rem;
+        text-decoration: none;
+        color: #ffb400;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
+
+        .back-to-shop:hover {
+            color: #ffc933;
+        }
+
+    @@media (max-width: 600px) {
+        .order-summary {
+            gap: 1rem;
+        }
+
+        .product-info {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>

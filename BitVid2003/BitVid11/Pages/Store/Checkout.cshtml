@@ -1,0 +1,112 @@
+﻿@page
+@model BitVid11.Pages.Store.CheckoutModel
+@{
+    ViewData["Title"] = "Checkout";
+    Layout = "_Layout2";
+}
+
+<div class="checkout-container">
+    <h2>Checkout</h2>
+
+    <div class="checkout-content">
+        <div class="checkout-right">
+            <h3>Order Summary</h3>
+            <div class="product-summary">
+                <img src="/product/images/@Model.Product.ImageFile" alt="@Model.Product.Name" />
+                <div>
+                    <div class="product-name">@Model.Product.Name</div>
+                    <div class="product-price">$@Model.Product.Price</div>
+                </div>
+            </div>
+            <div class="order-total">
+                <span>Total:</span>
+                <span>$@Model.Product.Price</span>
+            </div>
+
+            <!-- Buy Now form -->
+            <form method="post">
+                <input type="hidden" asp-for="ProductId" />
+                <button type="submit">Buy Now with Stripe</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .checkout-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        color: #fff;
+    }
+
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: #ffb400;
+    }
+
+    .checkout-content {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+        width: 100%;
+        max-width: 800px;
+    }
+
+    .checkout-right {
+        flex: 1;
+        background: #1f1f1f;
+        padding: 1.5rem;
+        border-radius: 1rem;
+    }
+
+    .product-summary {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+        .product-summary img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 0.6rem;
+        }
+
+    .product-name {
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+    }
+
+    .product-price {
+        color: #ffb400;
+        font-weight: bold;
+    }
+
+    .order-total {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    form button {
+        width: 100%;
+        padding: 0.8rem;
+        border-radius: 0.6rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        background-color: #ffb400;
+        color: #121212;
+        transition: background 0.3s;
+    }
+
+        form button:hover {
+            background-color: #ffc933;
+        }
+</style>

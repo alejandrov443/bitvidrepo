@@ -1,0 +1,99 @@
+﻿@page
+@model BitVid11.Pages.Store.CharacterProductsModel
+@{
+    ViewData["Title"] = Model.Character?.Name ?? "Character Products";
+    Layout = "_Layout2";
+}
+
+<div class="character-products-container">
+    <h2>@Model.Character.Name Merchandise</h2>
+
+    @if (Model.Products == null || !Model.Products.Any())
+    {
+        <p class="no-products-message">@Model.Character.Name has no products available.</p>
+    }
+    else
+    {
+        <div class="products-grid">
+            @foreach (var product in Model.Products)
+            {
+                <a class="product-tile" href="/Store/ProductDetails?productId=@product.Id">
+                    <div class="product-image">
+                        <img src="/product/images/@product.ImageFile" alt="@product.Name" />
+                    </div>
+                    <div class="product-name">@product.Name</div>
+                    <div class="product-price">$@product.Price</div>
+                </a>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .character-products-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        color: #fff;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+        color: #ffb400;
+        text-align: center;
+    }
+
+    .no-products-message {
+        color: #ccc;
+        font-size: 1.2rem;
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 1.2rem;
+        width: 100%;
+        max-width: 1000px;
+    }
+
+    .product-tile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        background: linear-gradient(135deg, #1f1f1f, #2a2a2a);
+        border-radius: 1rem;
+        padding: 1rem;
+        transition: transform 0.25s, box-shadow 0.25s;
+        color: #fff;
+    }
+
+        .product-tile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+    .product-image img {
+        width: 140px;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 1rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .product-name {
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+        text-align: center;
+    }
+
+    .product-price {
+        color: #ffb400;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>

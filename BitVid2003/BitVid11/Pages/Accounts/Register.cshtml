@@ -1,0 +1,42 @@
+﻿@page
+@model BitVid11.Pages.Accounts.RegisterModel
+@{
+    ViewData["Title"] = "Sign Up";
+}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh; color: black;">
+    <div class="card shadow-lg p-4" style="max-width: 420px; width: 100%; border-radius: 1rem; color: black;">
+        <h3 class="text-center mb-4" style="color: black;">✨ Sign Up to Chat 🤖</h3>
+
+        <form method="post" asp-page-handler="Submit" style="color: black;">
+            <!-- Username -->
+            <div class="mb-3">
+                <input type="text" class="form-control" name="Username" id="Username" placeholder="Username" />
+                <span class="text-danger small">@ModelState["Username"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <input type="password" class="form-control" name="Password" id="Password" placeholder="Password" />
+                <span class="text-danger small">@ModelState["Password"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <input type="email" class="form-control" name="Email" id="Email" placeholder="Email" />
+                <span class="text-danger small">@ModelState["Email"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+
+            <!-- Phone -->
+            <div class="mb-3">
+                <input type="tel" class="form-control" name="Phone" id="Phone" placeholder="Phone Number" />
+                <span class="text-danger small">@ModelState["Phone"]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+            </div>
+
+            <!-- Submit -->
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">🚀 Create Account</button>
+            </div>
+        </form>
+    </div>
+</div>

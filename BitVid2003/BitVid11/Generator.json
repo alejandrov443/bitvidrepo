@@ -1,0 +1,4 @@
+{
+  "ZImageApiUrl": "http://localhost:5001/generate",
+  "ApiKey": "supersecretkey"
+}

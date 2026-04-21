@@ -1,0 +1,96 @@
+﻿@page
+@model BitVid11.Pages.Store.ProductDetailsModel
+@{
+    ViewData["Title"] = Model.Product?.Name ?? "Product Details";
+    Layout = "_Layout2";
+}
+
+<div class="product-details-container">
+    <div class="product-image">
+        <img src="/product/images/@Model.Product.ImageFile" alt="@Model.Product.Name" />
+    </div>
+
+    <div class="product-info">
+        <h2>@Model.Product.Name</h2>
+        <h3>$@Model.Product.Price</h3>
+        <p>@Model.Product.Description</p>
+
+        <div class="product-actions">
+            <button class="add-to-cart">Add to Cart</button>
+            <button class="add-to-cart" onclick="location.href='/Store/Checkout?productId=@Model.Product.Id'">Buy Now</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .product-details-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2rem;
+        padding: 2rem;
+        color: #fff;
+    }
+
+    .product-image img {
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 1rem;
+    }
+
+    .product-info {
+        max-width: 400px;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    h2 {
+        font-size: 2rem;
+        color: #ffb400;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+        color: #fff;
+    }
+
+    p {
+        font-size: 1rem;
+        color: #ccc;
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    button.add-to-cart, button.buy-now {
+        padding: 0.8rem 1.5rem;
+        border-radius: 0.6rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    button.add-to-cart {
+        background-color: #ffb400;
+        color: #121212;
+    }
+
+        button.add-to-cart:hover {
+            background-color: #ffc933;
+        }
+
+    button.buy-now {
+        background-color: #ff4d4d;
+        color: #fff;
+    }
+
+        button.buy-now:hover {
+            background-color: #ff1a1a;
+        }
+</style>

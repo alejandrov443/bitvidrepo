@@ -1,0 +1,11 @@
+what pytorch version
+what cuda version
+what python version does ltx and zturbo use?
+
+python 3.12.1 - zturbo
+pytorch 2.9.1 - zturbo
+Cuda 12.8 (cu128) - zturbo
+
+python 3.13.5 - ltx 2
+pytorch 2.9.1 - ltx 2
+cuda 12.8 (cu128) - ltx 2

@@ -1,0 +1,277 @@
+﻿@page
+@model BitVid11.Pages.Chat.SwipeModel
+@{
+    ViewData["Title"] = "Swipe Characters";
+}
+
+<div class="swipe-container">
+    <h2>✨ Meet Characters</h2>
+    <div id="stack">
+        @for (int i = 0; i < Model.Profiles.Count; i++)
+        {
+            var p = Model.Profiles[i];
+            var z = Model.Profiles.Count - i;
+            <div class="card" data-id="@p.Id" data-name="@p.Name" style="z-index:@z;">
+                <div class="card-overlay pass">PASS</div>
+                <div class="card-overlay chat">CHAT</div>
+                <div class="card-image">
+                    <img src="@p.ImageUrl" alt="@p.Name" draggable="false" onerror="this.src='/images/default.png'" />
+                </div>
+                <div class="card-info">
+                    <h3>@p.Name</h3>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f8f8;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .swipe-container {
+        width: 100%;
+        max-width: 420px;
+        padding: 1rem;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: calc(100vh - 70px);
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        margin: 0.5rem 0;
+        color: #ffb400;
+        text-align: center;
+    }
+
+    #stack {
+        position: relative;
+        width: 100%;
+        height: 75vh;
+        max-height: 600px;
+        touch-action: pan-y;
+        margin-top: 0.5rem;
+    }
+
+    .card {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 20px;
+        background-color: #fff;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        cursor: grab;
+        will-change: transform;
+        transition: transform 0.2s ease;
+    }
+
+        .card:active {
+            transform: scale(1.02);
+        }
+
+    .card-image {
+        width: 100%;
+        height: 85%;
+        overflow: hidden;
+        border-radius: 20px;
+    }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .card-info {
+        height: 15%;
+        padding: 1rem;
+        background: linear-gradient(0deg, rgba(0,0,0,0.6), rgba(0,0,0,0));
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+        .card-info h3 {
+            color: #fff;
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+    /* Overlay messages slightly higher */
+    .card-overlay {
+        position: absolute;
+        top: 40%; /* moved higher */
+        left: 50%;
+        font-size: 2rem;
+        font-weight: 700;
+        padding: 0.5rem 1rem;
+        border: 4px solid;
+        border-radius: 10px;
+        opacity: 0;
+        pointer-events: none;
+        transform: translate(-50%, -50%) rotate(0deg);
+        transition: opacity 0.2s, transform 0.2s;
+        z-index: 999;
+    }
+
+        .card-overlay.pass {
+            color: #ff4d6d;
+            border-color: #ff4d6d;
+            transform: translate(-50%, -50%) rotate(-20deg);
+        }
+
+        .card-overlay.chat {
+            color: #25d366;
+            border-color: #25d366;
+            transform: translate(-50%, -50%) rotate(20deg);
+        }
+
+    @@media (max-width: 400px) {
+        .card-info h3
+
+    {
+        font-size: 1rem;
+    }
+
+    .swipe-container {
+        padding: 0.5rem;
+    }
+
+    #stack {
+        height: 65vh;
+    }
+
+    .card-overlay {
+        font-size: 1.5rem;
+    }
+
+    }
+</style>
+
+@section Scripts {
+    <script>
+        (function () {
+            const stack = document.getElementById('stack');
+
+            function applyStack() {
+                const cards = Array.from(stack.querySelectorAll('.card'));
+                cards.forEach((c, i) => {
+                    const offset = i * 8;
+                    const scale = 1 - i * 0.03;
+                    c.style.transition = 'transform 200ms ease';
+                    const base = `translateY(-${offset}px) scale(${scale})`;
+                    c.dataset.baseTransform = base;
+                    c.style.transform = base;
+                    c.style.zIndex = (cards.length - i).toString();
+                });
+            }
+            applyStack();
+
+            function initCard(card) {
+                let startX=0, startY=0, currentX=0, currentY=0, dragging=false;
+                const threshold = 100;
+                const passOverlay = card.querySelector('.card-overlay.pass');
+                const chatOverlay = card.querySelector('.card-overlay.chat');
+
+                card.addEventListener('pointerdown', ev => {
+                    card.setPointerCapture(ev.pointerId);
+                    dragging = true;
+                    startX = ev.clientX;
+                    startY = ev.clientY;
+                    currentX = 0; currentY = 0;
+                    card.style.transition = 'transform 0s';
+                });
+
+                card.addEventListener('pointermove', ev => {
+                    if (!dragging) return;
+                    currentX = ev.clientX - startX;
+                    currentY = ev.clientY - startY;
+                    const rotation = currentX / 20;
+                    const base = card.dataset.baseTransform || '';
+                    card.style.transform = `${base} translate(${currentX}px, ${currentY}px) rotate(${rotation}deg)`;
+
+                    // Show overlay dynamically
+                    const opacity = Math.min(Math.abs(currentX) / threshold, 1);
+                    if (currentX < 0) {
+                        passOverlay.style.opacity = opacity;
+                        chatOverlay.style.opacity = 0;
+                    } else if (currentX > 0) {
+                        chatOverlay.style.opacity = opacity;
+                        passOverlay.style.opacity = 0;
+                    } else {
+                        passOverlay.style.opacity = 0;
+                        chatOverlay.style.opacity = 0;
+                    }
+                });
+
+                function finish(ev) {
+                    if (!dragging) return;
+                    dragging = false;
+                    try { card.releasePointerCapture(ev.pointerId); } catch {}
+                    card.style.transition = 'transform 300ms ease';
+                    passOverlay.style.opacity = 0;
+                    chatOverlay.style.opacity = 0;
+
+                    if (Math.abs(currentX) > threshold) {
+                        const toRight = currentX > 0;
+                        const offX = (toRight ? window.innerWidth : -window.innerWidth) * 1.1;
+                        const offY = currentY + (Math.random() * 50 - 25);
+                        const rot = toRight ? 20 : -20;
+                        card.style.transform = `${card.dataset.baseTransform} translate(${offX}px, ${offY}px) rotate(${rot}deg)`;
+
+                        setTimeout(() => {
+                            const charId = card.dataset.id;
+                            const charName = card.dataset.name;
+
+                            if (toRight) {
+                                window.location.href = `/Chat/Chat?characterId=${charId}&name=${charName}`;
+                            } else {
+                                sendSwipe(charId, false);
+                            }
+
+                            card.remove();
+                            applyStack();
+                        }, 300);
+                    } else {
+                        card.style.transform = card.dataset.baseTransform || '';
+                    }
+
+                    currentX = 0; currentY = 0;
+                }
+
+                card.addEventListener('pointerup', finish);
+                card.addEventListener('pointercancel', finish);
+                card.addEventListener('lostpointercapture', function(){
+                    dragging=false;
+                    card.style.transform = card.dataset.baseTransform || '';
+                    passOverlay.style.opacity = 0;
+                    chatOverlay.style.opacity = 0;
+                });
+            }
+
+            Array.from(stack.querySelectorAll('.card')).forEach(initCard);
+
+            function sendSwipe(targetId, liked) {
+                fetch('?handler=Swipe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ targetUserId: parseInt(targetId,10), liked })
+                })
+                .then(r => r.json())
+                .then(j => console.log('swipe saved', j))
+                .catch(err => console.error('swipe error', err));
+            }
+        })();
+    </script>
+}

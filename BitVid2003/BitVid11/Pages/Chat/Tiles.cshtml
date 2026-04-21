@@ -1,0 +1,135 @@
+﻿@page
+@model TilesModel
+@{
+    ViewData["Title"] = "Tiles";
+    Layout = "_Layout2";
+}
+
+<div class="tiles-container">
+    <h2>✨ Select a Character</h2>
+
+    <div class="tiles-grid">
+        @foreach (var character in Model.Characters)
+        {
+            var formattedName = char.ToUpper(character.Name[0]) + character.Name.Substring(1).ToLower();
+            var imageFile = $"/images/{formattedName}.png";
+
+            <a href="/Chat/Chat?characterId=@character.Id&name=@character.Name" class="tile-card">
+                <div class="tile-image">
+                    <img src="@imageFile" alt="@formattedName" onerror="this.src='/images/default.png';" />
+                </div>
+                <div class="tile-name">@formattedName</div>
+            </a>
+        }
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #121212;
+        color: #fff;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .tiles-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 80vh;
+        padding: 1rem 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        color: #ffb400; /* Bumble yellow accent */
+    }
+
+    .tiles-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+        width: 100%;
+        max-width: 900px;
+        justify-items: center;
+    }
+
+    .tile-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        background: linear-gradient(135deg, #1f1f1f, #2a2a2a);
+        border-radius: 1rem;
+        padding: 0.8rem;
+        width: 100%;
+        max-width: 140px;
+        height: 190px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+        .tile-card:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+    .tile-image img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 0.6rem;
+        border: 2px solid #444;
+        transition: transform 0.25s, border-color 0.25s;
+    }
+
+    .tile-card:hover .tile-image img {
+        transform: scale(1.1);
+        border-color: #ffb400;
+    }
+
+    .tile-name {
+        text-align: center;
+        font-size: 0.95rem;
+        color: #fff;
+        word-break: break-word;
+    }
+
+    /* Mobile adjustments */
+    @@media (max-width: 480px) {
+        .tiles-container
+
+    {
+        padding: 1rem;
+    }
+
+    .tiles-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 0.8rem;
+    }
+
+    .tile-card {
+        max-width: 120px;
+        height: 180px;
+        font-size: 13px;
+        padding: 0.6rem;
+    }
+
+    .tile-image img {
+        width: 90px;
+        height: 90px;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    }
+</style>

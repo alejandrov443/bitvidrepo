@@ -1,0 +1,14 @@
+﻿@page
+@model BitVid11.Pages.Upload1Model
+@{
+}
+
+<form method="post" enctype="multipart/form-data">
+    <input type="file" name="file" />
+    <button type="submit">Upload</button>
+</form>
+
+@if (Model.Message != null)
+{
+    <div>@Model.Message</div>
+}

@@ -1,0 +1,397 @@
+﻿@page
+@model BitVid11.Pages.Chat.ChatModel
+@{
+    Layout = "_Layout2";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Ollama</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #fff;
+        }
+
+        .chat-container {
+            max-width: 600px;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 0 10px;
+        }
+
+        #chatBox {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #444;
+            padding: 10px;
+            overflow-y: auto;
+            background-color: #222;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 5px;
+            word-break: break-word;
+        }
+
+        .user {
+            background-color: #434343;
+            text-align: left;
+            color: #fff;
+        }
+
+        .bot {
+            background-color: #2F46A5;
+            text-align: left;
+            color: #fff;
+        }
+
+        #inputContainer {
+            display: flex;
+            gap: 5px;
+            width: 100%;
+        }
+
+        #userInput {
+            flex: 1;
+            min-height: 40px;
+            max-height: 120px;
+            padding: 0 8px;
+            border: 1px solid #555;
+            border-radius: 4px;
+            background-color: #333;
+            color: #fff;
+            font-size: 14px;
+            resize: none;
+            overflow-y: auto;
+            transition: height 0.2s ease;
+        }
+
+        #sendBtn {
+            padding: 0 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #252222;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        #sendBtn:hover {
+            background-color: #444;
+        }
+
+        #typingIndicator {
+            font-style: italic;
+            color: #bbb;
+            display: none;
+            margin-top: 5px;
+        }
+
+        img.bot-image {
+            max-width: 80px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .bot-generated-image {
+            max-width: 300px;
+            margin-top: 10px;
+            border-radius: 8px;
+            display: block;
+        }
+
+        @@media (max-width: 640px) {
+            #chatBox {
+                height: 450px;
+            }
+
+            #userInput {
+                font-size: 16px;
+            }
+        }
+
+        .bot-generated-video {
+            max-width: 100%;
+            margin-top: 10px;
+            border-radius: 8px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div style="text-align:center;">
+            <img id="botImage" class="bot-image" src="/images/ollama.png" />
+            <h4 id="botHeader">Chat with <span id="botName">Ollama</span></h4>
+        </div>
+
+        <div id="chatBox"></div>
+        <label>
+            <input type="checkbox" id="enableTTS" checked /> Enable AI Voice
+        </label>
+
+        <div id="inputContainer">
+            <textarea id="userInput" placeholder="Type a message..."></textarea>
+            <button id="sendBtn" onclick="sendMessage()">Send</button>
+        </div>
+
+        <p id="typingIndicator"></p>
+        <audio id="ttsAudio" controls style="display:none;"></audio>
+    </div>
+
+    <script>
+        const enableTTSCheckbox = document.getElementById("enableTTS");
+        const enableTTS = true;
+        const userInputField = document.getElementById("userInput");
+        const ttsAudio = document.getElementById("ttsAudio");
+        let botMessageElement = null;
+        let messageBuffer = "";
+
+        // Adjust textarea height
+        function adjustInputHeight() {
+            userInputField.style.height = "auto";
+            userInputField.style.height = userInputField.scrollHeight + "px";
+        }
+
+        userInputField.addEventListener("input", adjustInputHeight);
+        userInputField.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+                userInputField.style.height = "40px";
+            }
+        });
+
+        // Bot name setup
+        const urlParams = new URLSearchParams(window.location.search);
+        const rawName = urlParams.get('name') || "Ollama";
+        const botName = rawName.charAt(0).toUpperCase() + rawName.slice(1).toLowerCase();
+        document.getElementById("botName").innerText = botName;
+        document.getElementById("botImage").src = `/images/${botName}.png`;
+
+        const characterId = urlParams.get('characterId');
+
+        // SignalR connection
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl(`/chatHub?characterId=${characterId}`)
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        connection.start().catch(err => console.error(err));
+
+        // Append messages to chat
+        function appendMessage(sender, text, characterName) {
+            const chatBox = document.getElementById("chatBox");
+            const messageEl = document.createElement("p");
+            messageEl.classList.add("message", sender);
+            messageEl.innerHTML = `<strong>${sender === "bot" ? characterName : "You"}:</strong> ${text}`;
+            chatBox.appendChild(messageEl);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Send message
+        function sendMessage() {
+            const message = userInputField.value.trim();
+            if (!message) return;
+
+            appendMessage("user", message, botName);
+            userInputField.value = "";
+            userInputField.style.height = "40px";
+
+            const typingIndicator = document.getElementById("typingIndicator");
+            typingIndicator.textContent = `${botName} is typing...`;
+            typingIndicator.style.display = "block";
+
+            botMessageElement = null;
+            messageBuffer = "";
+
+            connection.invoke("SendMessage", "Naomi", message)
+                .catch(err => console.error(err));
+        }
+
+        // Receive streamed chunks
+        connection.on("ReceiveMessage", (sender, chunk, name, isHistory = false) => {
+            const chatBox = document.getElementById("chatBox");
+
+            if (isHistory) {
+                appendMessage(sender === "bot" ? "bot" : "user", chunk, name);
+                return;
+            }
+
+            if (sender === "user") return;
+
+            const typingIndicator = document.getElementById("typingIndicator");
+            typingIndicator.textContent = `${name} is typing...`;
+            typingIndicator.style.display = "block";
+
+            if (!botMessageElement) {
+                botMessageElement = document.createElement("p");
+                botMessageElement.classList.add("message", "bot");
+                botMessageElement.innerHTML = `<strong>${name}:</strong> <span></span>`;
+                chatBox.appendChild(botMessageElement);
+            }
+
+            messageBuffer += chunk;
+            botMessageElement.querySelector("span").textContent = messageBuffer;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        connection.on("ReceiveFullMessage", async (text, characterName) => {
+            if (!text) return;
+
+            if (botMessageElement) {
+                botMessageElement.querySelector("span").textContent = text;
+            } else {
+                appendMessage("bot", text, characterName);
+            }
+
+            document.getElementById("typingIndicator").style.display = "none";
+            botMessageElement = null;
+            messageBuffer = "";
+
+            const cleanedText = text.replace(/\*[\s\S]*?\*/g, "").trim();
+            if (!cleanedText) return;
+
+            // Fire TTS in background
+            if (enableTTSCheckbox.checked) {
+                speakText(cleanedText, characterName)
+                    .catch(err => console.error("TTS Error:", err));
+            }
+
+            // ✅ Add image loading placeholder
+            const chatBox = document.getElementById("chatBox");
+
+            const loadingMsg = document.createElement("p");
+            loadingMsg.dataset.imageLoading = "true"; // <-- PUT IT HERE
+            loadingMsg.classList.add("message", "bot");
+            loadingMsg.innerHTML = "<em>Generating image...</em>";
+
+            chatBox.appendChild(loadingMsg);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+                    // Add video loading placeholder
+        const videoLoading = document.createElement("p");
+        videoLoading.dataset.videoLoading = "true";
+        videoLoading.classList.add("message", "bot");
+        videoLoading.innerHTML = "<em>Generating video...</em>";
+
+        chatBox.appendChild(videoLoading);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        connection.on("ReceiveCharacterTts", (audioUrl) => {
+            const ttsAudio = document.getElementById("ttsAudio");
+            ttsAudio.src = audioUrl;
+            ttsAudio.style.display = "block";
+            ttsAudio.play().catch(err => console.warn("TTS autoplay blocked:", err));
+        });
+
+        // Text-to-speech
+        async function speakText(text, characterName) {
+            if (!text || !enableTTSCheckbox.checked) return;
+
+            try {
+                const res = await fetch(`/api/getCharacterVoice?name=${encodeURIComponent(characterName)}`);
+                const data = await res.json();
+                const voiceFile = data.voiceurl;
+
+                const formData = new FormData();
+                formData.append("text", text);
+
+                if (voiceFile) {
+                    const audioResp = await fetch(`/audio/${voiceFile}`);
+                    const blob = await audioResp.blob();
+                    formData.append("refAudio", blob, voiceFile);
+                }
+
+                const ttsResp = await fetch("/api/tts/stream-upload", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!ttsResp.ok) throw new Error("TTS API error");
+
+                const audioBlob = await ttsResp.blob();
+                const url = URL.createObjectURL(audioBlob);
+                ttsAudio.src = url;
+                ttsAudio.style.display = "block";
+
+                await ttsAudio.play().catch(err => console.warn("TTS autoplay blocked:", err));
+                ttsAudio.onended = () => URL.revokeObjectURL(url);
+            } catch (err) {
+                console.error("TTS Error:", err);
+            }
+        }
+
+        // Load chat history
+        connection.on("ReceiveHistory", (historyMessages) => {
+            historyMessages.forEach(msg => {
+                appendMessage(msg.sender === "bot" ? "bot" : "user", msg.text, msg.name);
+            });
+        });
+
+
+                connection.on("ReceiveImage", (imageUrl) => {
+            const chatBox = document.getElementById("chatBox");
+
+            // Remove loading message
+            const loading = document.querySelector('[data-image-loading="true"]');
+            if (loading) loading.remove();
+
+            const img = document.createElement("img");
+
+            // prevent browser caching
+            img.src = imageUrl + "?t=" + new Date().getTime();
+
+            img.classList.add("bot-generated-image");
+
+            chatBox.appendChild(img);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        connection.on("ReceiveVideo", (videoUrl) => {
+            const chatBox = document.getElementById("chatBox");
+
+            // Remove any existing video loading message
+            const loading = document.querySelector('[data-video-loading="true"]');
+            if (loading) loading.remove();
+
+            const video = document.createElement("video");
+            video.src = videoUrl + "?t=" + new Date().getTime(); // prevent caching
+            video.controls = true;
+            video.autoplay = false;
+            video.classList.add("bot-generated-video");
+
+            chatBox.appendChild(video);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        connection.on("VideoError", (message) => {
+            const chatBox = document.getElementById("chatBox");
+
+            const errorMsg = document.createElement("p");
+            errorMsg.classList.add("message", "bot");
+            errorMsg.innerHTML = `<em>${message}</em>`;
+
+            chatBox.appendChild(errorMsg);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+    </script>
+</body>
+</html>

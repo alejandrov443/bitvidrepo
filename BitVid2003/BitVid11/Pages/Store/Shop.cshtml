@@ -1,0 +1,72 @@
+﻿@page
+@model BitVid11.Pages.Store.ShopModel
+@{
+    ViewData["Title"] = "Shop";
+    Layout = "_Layout2";
+}
+
+<div class="shop-container">
+    <h2>🛍️ Character Merchandise</h2>
+
+    <div class="character-tiles">
+        @foreach (var character in Model.Characters)
+        {
+            var formattedName = char.ToUpper(character.Name[0]) + character.Name.Substring(1).ToLower();
+            var imageFile = $"/images/{formattedName}.png";
+
+            <a class="character-tile" href="/Store/CharacterProducts?characterId=@character.Id">
+                <img src="@imageFile" alt="@formattedName" onerror="this.src='/images/default.png';" />
+                <span>@formattedName</span>
+            </a>
+        }
+    </div>
+</div>
+
+<style>
+    .shop-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        color: #fff;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        color: #ffb400;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .character-tiles {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    .character-tile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        background: linear-gradient(135deg, #1f1f1f, #2a2a2a);
+        border-radius: 1rem;
+        padding: 0.5rem;
+        width: 100px;
+        color: #fff;
+        transition: transform 0.25s;
+        border: 2px solid transparent;
+    }
+
+        .character-tile:hover {
+            transform: translateY(-3px) scale(1.05);
+            border-color: #ffb400;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
+
+        .character-tile img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin-bottom:

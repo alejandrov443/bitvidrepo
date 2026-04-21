@@ -1,0 +1,32 @@
+HOW TO LAUNCH BITVID
+
+1. START VISUAL STUDIO PROJECT
+2. WAIT FOR BOTH GIT BASHES TO LOAD (THIS STARTS UP LTX 2 and BITVID) (page is called Generate) (output is in myvideos1) ( localhost:7860)
+2b. bitvid crashes after video generation
+3. IMAGE GENERATION WAIT UNTIL BITVID FULLY LOADS AND THIS MESSAGE IN CONSOLE APPEARS
+ (info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+      End processing HTTP request after 10915.1395ms - 200
+THE WORK LOG:
+
+ (None, None, 'System Ready. Waiting for jobs...', 'Queue Size: 0 | Idle')
+Stage 2 not found.
+
+
+3b. Afterwards go to VSCODE and make sure nunchakuturbo is setup as venv environment ((base) PS C:\zimageturbo\nunchaku> & c:\zimageturbo\nunchaku\nunchakuturbo\Scripts\Activate.ps1)
+3c. and run this command (uvicorn zimagegeneratez:app --reload --host 0.0.0.0 --port 5001)
+3d. wait for z image turbo to load before generating an image (page is called turboimage2)
+
+
+
+(base) PS C:\zimageturbo\nunchaku> & c:\zimageturbo\nunchaku\nunchakuturbo\Scripts\Activate.ps1
+(nunchakuturbo) (base) PS C:\zimageturbo\nunchaku> uvicorn zimagegeneratez:app --reload --host 0.0.0.0 --port 5001
+INFO:     Will watch for changes in these directories: ['C:\\zimageturbo\\nunchaku']
+INFO:     Uvicorn running on http://0.0.0.0:5001 (Press CTRL+C to quit)
+INFO:     Started reloader process [28116] using StatReload
+quantization_config: {'method': 'svdquant', 'weight': {'dtype': 'fp4_e2m1_all', 'scale_dtype': [None, 'fp8_e4m3_nan'], 'group_size': 16}, 'activation': {'dtype': 'fp4_e2m1_all', 'scale_dtype': 'fp8_e4m3_nan', 'group_size': 16}, 'rank': 32, 'skip_refiners': False}, rank=32, skip_refiners=False
+Loading pipeline components...:  60%|████████████████████████████▊                   | 3/5 [00:00<00:00,  6.29it/s]`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards: 100%|█████████████████████████████████████████████████████| 3/3 [00:00<00:00, 36.57it/s]
+Loading pipeline components...: 100%|████████████████████████████████████████████████| 5/5 [00:00<00:00,  5.73it/s]
+INFO:     Started server process [24384]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.

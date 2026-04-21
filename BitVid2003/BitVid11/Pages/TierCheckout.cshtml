@@ -1,0 +1,77 @@
+﻿@page
+@model BitVid11.Pages.Store.TierCheckoutModel
+@{
+    ViewData["Title"] = "Checkout — BitVid";
+}
+
+<div class="container py-5 text-center text-white">
+    <h2>Checkout</h2>
+    <p class="lead">You are subscribing to the <strong>@Model.Tier.ToUpper()</strong> plan.</p>
+    <div class="alert alert-info mt-4">
+        You will be redirected to Stripe to complete your payment.
+    </div>
+
+    <div class="spinner-container mt-5">
+        <div class="spinner"></div>
+        <p>Redirecting...</p>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #121212;
+    }
+
+    .container {
+        max-width: 500px;
+        margin: auto;
+    }
+
+    h2 {
+        color: #ffb400;
+        margin-bottom: 1rem;
+    }
+
+    .alert {
+        background-color: #1f1f1f;
+        color: #fff;
+        border: 1px solid #ffb400;
+        border-radius: 0.5rem;
+        padding: 1rem;
+    }
+
+    .spinner-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 2rem;
+    }
+
+    .spinner {
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #ffb400;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+    }
+
+    @@keyframes spin {
+        0%
+
+    {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+
+    }
+
+    p {
+        margin-top: 1rem;
+        color: #fff;
+        font-weight: 500;
+    }
+</style>

@@ -1,0 +1,11 @@
+﻿@page
+@model BitVid11.Pages.Store.TierSuccessModel
+@{
+    ViewData["Title"] = "Subscription Successful";
+}
+
+<div class="container py-5 text-center text-white">
+    <h2>Congratulations!</h2>
+    <p>Your subscription has been upgraded to <strong>@Model.Tier.ToUpper()</strong>.</p>
+    <a class="btn btn-info" href="/Tiers">Back to Tiers</a>
+</div>

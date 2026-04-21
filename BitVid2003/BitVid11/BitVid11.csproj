@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Scripts\**" />
+    <Compile Remove="wwwroot\aivideos\**" />
+    <Compile Remove="wwwroot\ai\**" />
+    <Compile Remove="wwwroot\chatimages\**" />
+    <Compile Remove="wwwroot\imagespythonpro\**" />
+    <Compile Remove="wwwroot\imagespython\**" />
+    <Compile Remove="wwwroot\imagestest\**" />
+    <Content Remove="Scripts\**" />
+    <Content Remove="wwwroot\aivideos\**" />
+    <Content Remove="wwwroot\ai\**" />
+    <Content Remove="wwwroot\chatimages\**" />
+    <Content Remove="wwwroot\imagespythonpro\**" />
+    <Content Remove="wwwroot\imagespython\**" />
+    <Content Remove="wwwroot\imagestest\**" />
+    <EmbeddedResource Remove="Scripts\**" />
+    <EmbeddedResource Remove="wwwroot\aivideos\**" />
+    <EmbeddedResource Remove="wwwroot\ai\**" />
+    <EmbeddedResource Remove="wwwroot\chatimages\**" />
+    <EmbeddedResource Remove="wwwroot\imagespythonpro\**" />
+    <EmbeddedResource Remove="wwwroot\imagespython\**" />
+    <EmbeddedResource Remove="wwwroot\imagestest\**" />
+    <None Remove="Scripts\**" />
+    <None Remove="wwwroot\aivideos\**" />
+    <None Remove="wwwroot\ai\**" />
+    <None Remove="wwwroot\chatimages\**" />
+    <None Remove="wwwroot\imagespythonpro\**" />
+    <None Remove="wwwroot\imagespython\**" />
+    <None Remove="wwwroot\imagestest\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Google.Apis" Version="1.71.0" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.71.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MySql.EntityFrameworkCore" Version="7.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="RestSharp" Version="112.1.0" />
+    <PackageReference Include="Stripe.net" Version="47.4.0" />
+    <PackageReference Include="Whisper.net" Version="1.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+    <Folder Include="uploads\" />
+    <Folder Include="wwwroot\audio\" />
+    <Folder Include="wwwroot\imagezturb\" />
+    <Folder Include="wwwroot\Ltx2\" />
+    <Folder Include="wwwroot\uploadedimages\" />
+    <Folder Include="wwwroot\NewFolder\" />
+    <Folder Include="wwwroot\zimage\" />
+    <Folder Include="wwwroot\product\images\" />
+  </ItemGroup>
+
+</Project>
